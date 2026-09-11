@@ -174,12 +174,14 @@ h1,h2,h3{font-family:var(--serif); font-weight:600; letter-spacing:-0.01em;}
 @keyframes cue{0%{opacity:0.2;}50%{opacity:1;}100%{opacity:0.2;}}
 
 /* ---------- GOOGLE DIVE SECTION ---------- */
-.dive-section{
-  position:relative; height:340vh;
-}
+.dive-section{position:relative; height:340vh;}
+@media (max-width:640px){.dive-section{height:auto;}}
 .dive-pin{
   position:sticky; top:0; height:100vh; overflow:hidden;
   display:flex; align-items:center; justify-content:center;
+}
+@media (max-width:640px){
+  .dive-pin{position:relative; height:auto; min-height:auto; padding:36px 0 30px; overflow:visible;}
 }
 .dive-bg{
   position:absolute; inset:0;
@@ -368,6 +370,17 @@ footer{border-top:1px solid var(--line); padding:28px 0; text-align:center; colo
   .final-character{margin-bottom:14px;}
   .final-cta{margin-bottom:28px;}
   .contact-row{gap:16px; flex-direction:column;}
+}@media (max-width:640px){
+  .dive-google-wrap, .dive-character-wrap, .dive-searchbar, .dive-results, .dive-stages{
+    position:relative !important; left:auto !important; top:auto !important; transform:none !important;
+    width:auto !important; max-width:88vw !important; margin:0 auto 14px;
+  }
+  .dive-google-wrap{max-width:220px !important;}
+  .dive-character-wrap{max-width:110px !important; display:none;}
+  .dive-searchbar{max-width:88vw !important; opacity:1 !important; scale:1 !important;}
+  .dive-results{display:flex; justify-content:center;}
+  .dive-result-chip{opacity:1 !important; transform:none !important;}
+  .dive-stages{gap:14px; flex-wrap:wrap; justify-content:center;}
 }
 </style>
 </head>
@@ -692,6 +705,8 @@ footer{border-top:1px solid var(--line); padding:28px 0; text-align:center; colo
 <script>
 gsap.registerPlugin(ScrollTrigger);
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isMobile = window.innerWidth <= 640;
+const skipCinematic = reduce || isMobile;
 
 /* ---- Mascot show + state per section ---- */
 const mascot = document.getElementById('mascot');
@@ -732,7 +747,7 @@ ScrollTrigger.create({
 });
 
 /* ---- Hero -> Dive cinematic scroll (skipped if reduced motion) ---- */
-if(!reduce){
+if(!skipCinematic){
   const diveTL = gsap.timeline({
     scrollTrigger:{
       trigger:'#dive', start:'top top', end:'bottom bottom', scrub:1
@@ -770,6 +785,7 @@ if(!reduce){
   document.getElementById('diveSearchbar').style.opacity='1';
   document.getElementById('diveSearchbar').style.transform='none';
   document.querySelectorAll('.dive-result-chip').forEach(c=>{c.style.opacity='1'; c.style.transform='none';});
+  document.querySelectorAll('.dive-stage').forEach(s=>s.classList.add('on'));
 }
 
 /* ---- Case study graph draw on view ---- */
